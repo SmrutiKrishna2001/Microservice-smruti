@@ -30,12 +30,9 @@ RUN git clone https://github.com/open-telemetry/opentelemetry-cpp \
           -DWITH_EXAMPLES=OFF -DWITH_OTLP_GRPC=ON -DWITH_ABSEIL=ON \
     && make -j$(nproc || sysctl -n hw.ncpu || echo 1) install && cd ../..
 
-COPY . ./src/currencyservice
+COPY . /currencyservice
 
-RUN cd /src/currencyservice \
-    && mkdir -p build && cd build \
-    && cmake .. \
-    && make -j$(nproc || sysctl -n hw.ncpu || echo 1) install
+RUN cd /currencyservice && mkdir -p build && cd build && cmake .. && make -j$(nproc || sysctl -n hw.ncpu || echo 1) install
 
 
 FROM alpine:3.18 as release
