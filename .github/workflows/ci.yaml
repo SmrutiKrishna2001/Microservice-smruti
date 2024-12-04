@@ -32,7 +32,7 @@ jobs:
       - name: Build and Push Docker Images
         run: |
           ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
-          COMMIT_HASH=$(git rev-parse --short HEAD)  # Get the short commit hash
+          COMMIT_HASH=$(git rev-parse --short HEAD)
 
           for DOCKERFILE in $(find src -name Dockerfile); do
             SERVICE=$(basename $(dirname $DOCKERFILE))
@@ -47,7 +47,7 @@ jobs:
             aws ecr create-repository --repository-name $REPO_NAME
 
             # Build the Docker image with the commit hash tag
-            docker build -t $SERVICE:$IMAGE_TAG -f $DOCKERFILE $(dirname $DOCKERFILE)/../
+            docker build -t $SERVICE:$IMAGE_TAG -f $DOCKERFILE $(dirname $DOCKERFILE)/../../
 
             # Tag the image and push it to ECR
             docker tag $SERVICE:$IMAGE_TAG $ECR_URI:$IMAGE_TAG
