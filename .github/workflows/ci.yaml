@@ -32,19 +32,27 @@ jobs:
       - name: Build and Push Docker Images
         run: |
           ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
+          COMMIT_HASH=$(git rev-parse --short HEAD)
 
           for DOCKERFILE in $(find src -name Dockerfile); do
             SERVICE=$(basename $(dirname $DOCKERFILE))
-            IMAGE_TAG="mordified"
             REPO_NAME="$SERVICE"
             ECR_URI="$ACCOUNT_ID.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/$REPO_NAME"
             
             echo "Building and pushing image for service: $SERVICE to ECR repo: $REPO_NAME"
             
+            # Ensure the repository exists
             aws ecr describe-repositories --repository-names $REPO_NAME || \
             aws ecr create-repository --repository-name $REPO_NAME
 
-            docker build -t $SERVICE:latest $(dirname $DOCKERFILE)
-            docker tag $SERVICE:latest $ECR_URI:$IMAGE_TAG
-            docker push $ECR_URI:$IMAGE_TAG
+            # Build the Docker image
+            docker build -t $SERVICE:$COMMIT_HASH -f $DOCKERFILE $(dirname $DOCKERFILE)
+            
+            # Tag the image with the commit hash and push it to ECR
+            docker tag $SERVICE:$COMMIT_HASH $ECR_URI:$COMMIT_HASH
+            docker push $ECR_URI:$COMMIT_HASH
+            
+            # Optionally: update the "latest" tag to point to the new image
+            docker tag $SERVICE:$COMMIT_HASH $ECR_URI:latest
+            docker push $ECR_URI:latest
           done
