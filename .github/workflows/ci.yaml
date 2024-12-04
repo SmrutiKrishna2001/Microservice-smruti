@@ -1,4 +1,4 @@
-name: CI for Build & Push Docker Images
+name: CI for Build & Push Docker Images by GitHub Action
 on:
   push:
     paths:
