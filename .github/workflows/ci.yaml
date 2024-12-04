@@ -35,7 +35,7 @@ jobs:
 
           for DOCKERFILE in $(find src -name Dockerfile); do
             SERVICE=$(basename $(dirname $DOCKERFILE))
-            IMAGE_TAG="$SERVICE:latest"
+            IMAGE_TAG="mordified"
             REPO_NAME="$SERVICE"
             ECR_URI="$ACCOUNT_ID.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/$REPO_NAME"
             
