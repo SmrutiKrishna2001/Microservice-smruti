@@ -35,7 +35,19 @@ jobs:
           COMMIT_HASH=$(git rev-parse --short HEAD)
 
           for DOCKERFILE in $(find src -name Dockerfile); do
-            SERVICE=$(basename $(dirname $DOCKERFILE))
+            # Get service name based on Dockerfile location
+            if [[ "$DOCKERFILE" == "src/cartservice/src/Dockerfile" ]]; then
+              SERVICE="cartservice"
+            else
+              SERVICE=$(basename $(dirname $DOCKERFILE))
+            fi
+
+            # Skip the src/Dockerfile if accidentally included
+            if [ "$SERVICE" == "src" ]; then
+              echo "Skipping top-level src Dockerfile"
+              continue
+            fi
+
             IMAGE_TAG="$COMMIT_HASH"  # Use commit hash as the tag for the image
             REPO_NAME="${SERVICE}-smruti"
             ECR_URI="$ACCOUNT_ID.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/$REPO_NAME"
