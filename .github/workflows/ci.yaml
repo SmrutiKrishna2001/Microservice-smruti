@@ -37,7 +37,7 @@ jobs:
           for DOCKERFILE in $(find src -name Dockerfile); do
             SERVICE=$(basename $(dirname $DOCKERFILE))
             IMAGE_TAG="$COMMIT_HASH"  # Use commit hash as the tag for the image
-            REPO_NAME="$SERVICE"
+            REPO_NAME="${SERVICE}-smruti"
             ECR_URI="$ACCOUNT_ID.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/$REPO_NAME"
             
             echo "Building and pushing image for service: $SERVICE to ECR repo: $REPO_NAME with tag: $IMAGE_TAG"
