@@ -1,46 +1,35 @@
-## Copyright The OpenTelemetry Authorss
-# SPDX-License-Identifier: Apache-2.0
-# Copyright 2021 Google LLC
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#      http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
-# https://mcr.microsoft.com/v2/dotnet/sdk/tags/list
+# Use the .NET SDK image for building
 FROM mcr.microsoft.com/dotnet/sdk:6.0.412 AS builder
 
 WORKDIR /usr/src/app/
 
+# Copy the service and protobuf definitions
 COPY ./src/cartservice/ ./
 COPY ./pb/ ./src/protos/
 
+# Restore dependencies
 RUN \
-  RUNTIME_IDENTIIFER=linux-musl-x64; \
-  if [ "$(uname -m)" = "aarch64" ]; then RUNTIME_IDENTIIFER=linux-musl-arm64; fi; \
-  dotnet restore ./src/cartservice.csproj -v d -r $RUNTIME_IDENTIIFER
+  RUNTIME_IDENTIFIER=linux-musl-x64; \
+  if [ "$(uname -m)" = "aarch64" ]; then RUNTIME_IDENTIFIER=linux-musl-arm64; fi; \
+  dotnet restore ./src/cartservice.csproj -v d -r $RUNTIME_IDENTIFIER
 
+# Build and publish the service
 RUN \
-  RUNTIME_IDENTIIFER=linux-musl-x64; \
-  if [ "$(uname -m)" = "aarch64" ]; then RUNTIME_IDENTIIFER=linux-musl-arm64; fi; \
-  dotnet publish ./src/cartservice.csproj -v d -p:PublishSingleFile=true -r $RUNTIME_IDENTIIFER --self-contained true -p:PublishTrimmed=False -p:TrimMode=Link -c Release -o /cartservice --no-restore
+  RUNTIME_IDENTIFIER=linux-musl-x64; \
+  if [ "$(uname -m)" = "aarch64" ]; then RUNTIME_IDENTIFIER=linux-musl-arm64; fi; \
+  dotnet publish ./src/cartservice.csproj -v d -p:PublishSingleFile=true -r $RUNTIME_IDENTIFIER \
+    --self-contained true -p:PublishTrimmed=False -p:TrimMode=Link -c Release -o /cartservice --no-restore
 
-# -----------------------------------------------------------------------------
-
-# https://mcr.microsoft.com/v2/dotnet/runtime-deps/tags/list
+# Runtime image
 FROM mcr.microsoft.com/dotnet/runtime-deps:6.0.15-alpine3.16
 
 WORKDIR /usr/src/app/
+
+# Copy the published application
 COPY --from=builder /cartservice/ ./
 
-EXPOSE ${CART_SERVICE_PORT}
-ENTRYPOINT [ "./cartservice" ]
+# Expose the application port
+EXPOSE 50051
 
-
+# Set the entrypoint
+ENTRYPOINT ["./cartservice"]
