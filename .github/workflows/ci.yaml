@@ -46,8 +46,14 @@ jobs:
             aws ecr describe-repositories --repository-names $REPO_NAME || \
             aws ecr create-repository --repository-name $REPO_NAME
 
-            # Build the Docker image with the commit hash tag
-            docker build -t $SERVICE:$IMAGE_TAG -f $DOCKERFILE $(dirname $DOCKERFILE)/../../
+            # Special logic for cartservice
+            if [ "$SERVICE" == "cartservice" ]; then
+              # Build the Docker image for cartservice using its specific Dockerfile and root directory as context
+              docker build -t $SERVICE:$IMAGE_TAG -f src/cartservice/src/Dockerfile .
+            else
+              # Default build for all other services
+              docker build -t $SERVICE:$IMAGE_TAG -f $DOCKERFILE $(dirname $DOCKERFILE)/../../
+            fi
 
             # Tag the image and push it to ECR
             docker tag $SERVICE:$IMAGE_TAG $ECR_URI:$IMAGE_TAG
