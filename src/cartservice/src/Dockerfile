@@ -5,7 +5,7 @@ WORKDIR /usr/src/app/
 
 # Copy the service and protobuf definitions
 COPY ./src/cartservice/ ./
-COPY ./pb/ ./src/protos/
+COPY /pb/ ./src/protos/
 
 # Restore dependencies
 RUN \
