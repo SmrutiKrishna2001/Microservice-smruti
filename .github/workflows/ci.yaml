@@ -71,3 +71,4 @@ jobs:
             docker tag $SERVICE:$IMAGE_TAG $ECR_URI:$IMAGE_TAG
             docker push $ECR_URI:$IMAGE_TAG
           done
+          # complete

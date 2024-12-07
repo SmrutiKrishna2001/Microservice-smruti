@@ -1,7 +1,3 @@
-## Copyright The OpenTelemetry Authors
-# SPDX-License-Identifier: Apache-2.0
-
-
 defmodule FeatureflagserviceWeb.Router do
   use FeatureflagserviceWeb, :router
 
@@ -23,5 +19,8 @@ defmodule FeatureflagserviceWeb.Router do
 
     get "/", PageController, :index
     resources "/featureflags", FeatureFlagController
+
+    # Add the health check route here
+    get "/health", HealthCheckController, :index
   end
 end
