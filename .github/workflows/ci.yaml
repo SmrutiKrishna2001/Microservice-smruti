@@ -42,22 +42,12 @@ jobs:
               SERVICE=$(basename $(dirname $DOCKERFILE))
             fi
 
-            # Skip the src/Dockerfile if accidentally included
-            if [ "$SERVICE" == "src" ]; then
-              echo "Skipping top-level src Dockerfile"
-              continue
-            fi
-
             IMAGE_TAG="$COMMIT_HASH"  # Use commit hash as the tag for the image
             REPO_NAME="${SERVICE}-smruti"
             ECR_URI="$ACCOUNT_ID.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/$REPO_NAME"
             
             echo "Building and pushing image for service: $SERVICE to ECR repo: $REPO_NAME with tag: $IMAGE_TAG"
             
-            # Ensure the repository exists in ECR
-            aws ecr describe-repositories --repository-names $REPO_NAME || \
-            aws ecr create-repository --repository-name $REPO_NAME
-
             # Special logic for cartservice
             if [ "$SERVICE" == "cartservice" ]; then
               # Build the Docker image for cartservice using its specific Dockerfile and root directory as context
