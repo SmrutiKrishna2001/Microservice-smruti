@@ -11,8 +11,8 @@ Deployment:
     name: 
     image: otel/opentelemetry-collector-contrib:0.86.0
     ports:
-    - containerPort: 4317 # gRPC
-    - containerPort: 4318 # HTTP
+      - containerPort: 4317 # gRPC
+      - containerPort: 4318 # HTTP
 
   args: 
     - "--config=/etc/otelcol/otelcol-config.yml"

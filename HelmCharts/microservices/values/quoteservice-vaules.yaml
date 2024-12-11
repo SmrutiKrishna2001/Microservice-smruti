@@ -11,7 +11,7 @@ Deployment:
     name: 
     image: 218306567362.dkr.ecr.ap-south-1.amazonaws.com/quoteservice-smruti:aa7b53b 
     ports:
-    - containerPort: 50051
+      - containerPort: 50051
 
 
   env:
@@ -42,7 +42,7 @@ Service:
     - protocol: TCP
       port: 80   # Exposed port for other services to connect
       targetPort: 50051 # If you want to create a headless service (for internal communication)
-
+  type: ClusterIP
 
 configMap:
   enabled: false

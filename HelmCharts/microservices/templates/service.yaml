@@ -7,6 +7,9 @@ metadata:
 spec:
   selector:
     app: {{ .Values.Service.labels.app }}
+  {{- if .Values.Service.clusterIP }}
+  clusterIP: {{ .Values.Service.clusterIP }}
+  {{- end }}
   ports:
   {{- if .Values.Service.ports }}
   {{- range .Values.Service.ports }}

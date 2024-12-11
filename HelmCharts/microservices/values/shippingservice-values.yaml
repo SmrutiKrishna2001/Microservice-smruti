@@ -11,7 +11,7 @@ Deployment:
     name: 
     image: 218306567362.dkr.ecr.ap-south-1.amazonaws.com/shippingservice-smruti:aa7b53b 
     ports:
-    - containerPort: 50051
+      - containerPort: 50051
 
 
   env:

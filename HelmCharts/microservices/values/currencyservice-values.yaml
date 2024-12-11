@@ -11,7 +11,7 @@ Deployment:
     name: 
     image: 218306567362.dkr.ecr.ap-south-1.amazonaws.com/currencyservice-smruti:559e7d7 
     ports:
-    - containerPort: 50051
+      - containerPort: 50051
 
 
   env:
@@ -32,7 +32,7 @@ Service:
   ports:
     - port: 50051
       targetPort: 50051
-   
+  type: ClusterIP 
 
 configMap:
   enabled: false

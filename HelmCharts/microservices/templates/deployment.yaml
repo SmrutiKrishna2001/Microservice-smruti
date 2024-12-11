@@ -40,24 +40,24 @@ spec:
           {{- end }}
           {{- end }}
 
-          {{- if .Values.resources }}
+          {{- if .Values.Deployment.resources }}
           resources:
-          {{- if .Values.resources.requests }}
+          {{- if .Values.Deployment.resources.requests }}
           requests:
-            {{- if .Values.resources.requests.cpu }}
-            cpu: {{ .Values.resources.requests.cpu }}
+            {{- if .Values.Deployment.resources.requests.cpu }}
+            cpu: {{ .Values.Deployment.requests.cpu | quote }}
             {{- end }}
-            {{- if .Values.resources.requests.memory }}
-            memory: {{ .Values.resources.requests.memory }}
+            {{- if .Values.Deployment.resources.requests.memory }}
+            memory: {{ .Values.Deployment.resources.requests.memory | quote }}
             {{- end }}
           {{- end }}
-          {{- if .Values.resources.limits }}
+          {{- if .Values.Deployment.resources.limits }}
           limits:
-            {{- if .Values.resources.limits.cpu }}
-            cpu: {{ .Values.resources.limits.cpu }}
+            {{- if .Values.Deployment.resources.limits.cpu }}
+            cpu: {{ .Values.Deployment.resources.limits.cpu | quote }}
             {{- end }}
-            {{- if .Values.resources.limits.memory }}
-            memory: {{ .Values.resources.limits.memory }}
+            {{- if .Values.Deployment.resources.limits.memory }}
+            memory: {{ .Values.Deployment.resources.limits.memory | quote }}
             {{- end }}
           {{- end }}
         {{- end }}
