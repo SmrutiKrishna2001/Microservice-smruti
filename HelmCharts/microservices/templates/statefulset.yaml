@@ -19,17 +19,16 @@ spec:
       containers:
         - name: {{ .Release.Name }}
           image: {{ .Values.statefulset.containers.image }}
+          args:
+          {{- if .Values.statefulset.containers.args }}
+          {{- range .Values.statefulset.containers.args }}
+            - {{ . | quote }}
+          {{- end }}
+          {{- end }}
           ports:
           {{- if .Values.statefulset.containers.ports }}
           {{- range .Values.statefulset.containers.ports }}
             - containerPort: {{ .containerPort }}
-          {{- end }}
-          {{- end }}
-          volumeMounts:
-          {{- if .Values.statefulset.volumeMounts }}
-          {{- range .Values.statefulset.volumeMounts }}
-            - name: {{ .name }}
-              mountPath: {{ .mountPath }}
           {{- end }}
           {{- end }}
           env:
@@ -39,29 +38,28 @@ spec:
               value: {{ .value | quote }}
           {{- end }}
           {{- end }}
-          {{- if .Values.statefulset.livenessProbe }}
-          livenessProbe:
-            {{- toYaml .Values.statefulset.livenessProbe | nindent 12 }}
+          volumeMounts:
+          {{- if .Values.statefulset.volumeMounts }}
+          {{- range .Values.statefulset.volumeMounts }}
+            - name: {{ .name }}
+              mountPath: {{ .mountPath | quote }}
           {{- end }}
-          {{- if .Values.statefulset.readinessProbe }}
-          readinessProbe:
-            {{- toYaml .Values.statefulset.readinessProbe | nindent 12 }}
           {{- end }}
   volumeClaimTemplates:
   {{- if .Values.statefulset.volumeClaimTemplates }}
   {{- range .Values.statefulset.volumeClaimTemplates }}
     - metadata:
-        name: {{ .name }}
+        name: {{ .metadata.name }}
       spec:
         accessModes:
-        {{- range .accessModes }}
+        {{- range .spec.accessModes }}
           - {{ . }}
         {{- end }}
         resources:
           requests:
             storage: {{ .spec.resources.requests.storage }}
-        {{- if .storageClassName }}
-        storageClassName: {{ .storageClassName }}
+        {{- if .spec.storageClassName }}
+        storageClassName: {{ .spec.storageClassName }}
         {{- end }}
   {{- end }}
   {{- end }}
