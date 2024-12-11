@@ -2,7 +2,7 @@ name: CI for Build & Push Docker Images by GitHub Action
 on:
   push:
     paths:
-      - src/**/Dockerfile
+      - src/**
       - .github/workflows/ci.yaml
 
 jobs:

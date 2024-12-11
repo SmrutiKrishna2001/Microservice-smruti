@@ -1,0 +1,87 @@
+{{- if .Values.Deployment.enabled}}
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}
+  labels:
+    app: {{ .Values.Deployment.labels.app }}
+spec:
+  replicas: {{ .Values.Deployment.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.Deployment.labels.app }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.Deployment.labels.app }}
+    spec:
+      containers:
+        - name: {{ .Release.Name }}
+          image: {{ .Values.Deployment.containers.image }}
+          args:
+          {{- if .Values.Deployment.args }}
+          {{- range .Values.Deployment.args }}
+            - {{ . | quote }}
+          {{- end }}
+          {{- end }}
+          ports:
+          {{- if .Values.Deployment.containers.ports }}
+          {{- range .Values.Deployment.containers.ports }}
+            - containerPort: {{ .containerPort }}
+          {{- end }}
+          {{- end }}
+          # Conditionally add environment variables
+          env:
+          {{- if .Values.Deployment.env }}
+          {{- range .Values.Deployment.env }}
+            - name: {{ .name }}
+              value: {{ .value | quote }}
+          {{- end }}
+          {{- end }}
+
+          {{- if .Values.resources }}
+          resources:
+          {{- if .Values.resources.requests }}
+          requests:
+            {{- if .Values.resources.requests.cpu }}
+            cpu: {{ .Values.resources.requests.cpu }}
+            {{- end }}
+            {{- if .Values.resources.requests.memory }}
+            memory: {{ .Values.resources.requests.memory }}
+            {{- end }}
+          {{- end }}
+          {{- if .Values.resources.limits }}
+          limits:
+            {{- if .Values.resources.limits.cpu }}
+            cpu: {{ .Values.resources.limits.cpu }}
+            {{- end }}
+            {{- if .Values.resources.limits.memory }}
+            memory: {{ .Values.resources.limits.memory }}
+            {{- end }}
+          {{- end }}
+        {{- end }}
+          # Conditionally add volume mounts
+          volumeMounts:
+          {{- if .Values.Deployment.volumeMounts }}
+          {{- range .Values.Deployment.volumeMounts }}
+            - name: {{ .name }}
+              mountPath: {{ .mountPath | quote }}
+              {{- if .readOnly }}
+              readOnly: {{ .readOnly }}
+              {{- end }}
+          {{- end }}
+          {{- end }}
+      # Conditionally add volumes
+      volumes:
+      {{- if .Values.Deployment.volumes }}
+      {{- range .Values.Deployment.volumes }}
+        - name: {{ .name }}
+          {{- if .configMap }}
+          configMap:
+            name: {{ .configMap.name }}
+          {{- end }}
+      {{- end }}
+      {{- end }}
+
+{{- end }}
