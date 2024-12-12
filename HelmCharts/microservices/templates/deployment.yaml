@@ -67,6 +67,9 @@ spec:
           {{- range .Values.Deployment.volumeMounts }}
             - name: {{ .name }}
               mountPath: {{ .mountPath | quote }}
+              {{- if .subPath}}
+              subPath: {{ .subPath}}
+              {{- end }}
               {{- if .readOnly }}
               readOnly: {{ .readOnly }}
               {{- end }}
