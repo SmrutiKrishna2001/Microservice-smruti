@@ -1,0 +1,27 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: microservices-applications
+  namespace: argocd
+spec:
+  generators:
+    - git:
+        repoURL: 'https://github.com/SmrutiKrishna2001/microservices.git'
+        revision: 'master' # Specify the branch here
+        directories:
+          - path: 'HelmCharts/microservices/values'
+  template:
+    metadata:
+      name: '{{path.basename}}'
+    spec:
+      project: default
+      source:
+        repoURL: 'https://github.com/SmrutiKrishna2001/microservices.git'
+        targetRevision: 'master'
+        chart: './HelmCharts/microservices'
+        helm:
+          valueFiles:
+            - './HelmCharts/microservices/values/{{path.basename}}'
+      destination:
+        server: 'https://kubernetes.default.svc'
+        namespace: default # Fixed namespace for all applications
