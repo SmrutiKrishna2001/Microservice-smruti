@@ -7,21 +7,21 @@ spec:
   generators:
     - git:
         repoURL: 'https://github.com/SmrutiKrishna2001/microservices.git'
-        revision: 'master' # Specify the branch here
+        revision: 'practice'  # Specify the branch name here (can change to master if needed)
         directories:
-          - path: 'HelmCharts/microservices/values'
+          - path: 'HelmCharts/microservices/values'  # This is the path where the individual service values files are located
   template:
     metadata:
-      name: '{{path.basename}}'
+      name: '{{path.basename}}'  # This will use the directory name as the application name
     spec:
       project: default
       source:
         repoURL: 'https://github.com/SmrutiKrishna2001/microservices.git'
-        targetRevision: 'master'
-        chart: './HelmCharts/microservices'
+        targetRevision: 'practice'  # Specify the branch name here (can change to master if needed)
+        chart: './HelmCharts/microservices'  # Path to the Helm chart
         helm:
           valueFiles:
-            - './HelmCharts/microservices/values/{{path.basename}}'
+            - './HelmCharts/microservices/values/{{path.basename}}.yaml'  # This uses the values files under the values directory
       destination:
-        server: 'https://kubernetes.default.svc'
-        namespace: default # Fixed namespace for all applications
+        server: 'https://kubernetes.default.svc'  # Use the default Kubernetes API server
+        namespace: default  # You can modify the namespace as needed
