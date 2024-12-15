@@ -5,23 +5,54 @@ metadata:
   namespace: argocd
 spec:
   generators:
-    - git:
-        repoURL: 'https://github.com/SmrutiKrishna2001/microservices.git'
-        revision: 'master' # Specify the branch here
-        directories:
-          - path: 'HelmCharts/microservices/values'
+    - list:
+        elements:
+          - name: otelcol
+            valueFile: values/otelcol-values.yaml
+          - name: adservice
+            valueFile: values/adservice-values.yaml
+          - name: cartservice
+            valueFile: values/cartservice-values.yaml
+          - name: currencyservice
+            valueFile: values/currencyservice-values.yaml
+          - name: emailservice
+            valueFile: values/emailservice-values.yaml
+          - name: featureflagservice
+            valueFile: values/featureflagservice-values.yaml
+          - name: ffs-postgres
+            valueFile: values/ffs-postgres-values.yaml
+          - name: grafana
+            valueFile: values/grafana-values.yaml
+          - name: otelcol
+            valueFile: values/otelcol-values.yaml
+          - name: paymentservice
+            valueFile: values/paymentservice-values.yaml
+          - name: productcatalogservice
+            valueFile: values/productcatalogservice-values.yaml
+          - name: quoteservice
+            valueFile: values/quoteservice-values.yaml
+          - name: recommendationservice
+            valueFile: values/recommendationservice-values.yaml
+          - name: redis-cart
+            valueFile: values/redis-cart.values.yaml
+          - name: shippingservice
+            valueFile: values/shippingservice-values.yaml
   template:
     metadata:
-      name: '{{path.basename}}'
+      name: '{{name}}'
     spec:
       project: default
       source:
         repoURL: 'https://github.com/SmrutiKrishna2001/microservices.git'
-        targetRevision: 'master'
-        chart: './HelmCharts/microservices'
+        targetRevision: HEAD
+        path: HelmCharts/microservices
         helm:
           valueFiles:
-            - './HelmCharts/microservices/values/{{path.basename}}'
+            - '{{valueFile}}'  # Use the valueFile for each microservice
       destination:
         server: 'https://kubernetes.default.svc'
-        namespace: default # Fixed namespace for all applications
+        namespace: default
+      syncPolicy:
+        automated:
+          prune: false
+          selfHeal: false
