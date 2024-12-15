@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
         - name: {{ .Release.Name }}
-          image: {{ .Values.Deployment.containers.image }}
+          image: {{ .Values.Deployment.containers.image }}{{ if .Values.Deployment.containers.tag }}:{{ .Values.Deployment.containers.tag }}{{ end }}
           args:
           {{- if .Values.Deployment.args }}
           {{- range .Values.Deployment.args }}

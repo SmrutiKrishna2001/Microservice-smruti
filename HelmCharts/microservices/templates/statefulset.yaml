@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
         - name: {{ .Release.Name }}
-          image: {{ .Values.statefulset.containers.image }}
+          image: {{ .Values.statefulset.containers.image }}{{ if .Values.statefulset.containers.tag }}:{{ .Values.statefulset.containers.tag }}{{ end }}
           args:
           {{- if .Values.statefulset.containers.args }}
           {{- range .Values.statefulset.containers.args }}
