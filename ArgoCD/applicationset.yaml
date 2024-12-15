@@ -7,8 +7,6 @@ spec:
   generators:
     - list:
         elements:
-          - name: otelcol
-            valueFile: values/otelcol-values.yaml
           - name: adservice
             valueFile: values/adservice-values.yaml
           - name: cartservice
@@ -21,8 +19,6 @@ spec:
             valueFile: values/featureflagservice-values.yaml
           - name: ffs-postgres
             valueFile: values/ffs-postgres-values.yaml
-          - name: grafana
-            valueFile: values/grafana-values.yaml
           - name: otelcol
             valueFile: values/otelcol-values.yaml
           - name: paymentservice
@@ -44,7 +40,7 @@ spec:
       project: default
       source:
         repoURL: 'https://github.com/SmrutiKrishna2001/microservices.git'
-        targetRevision: HEAD
+        targetRevision: practice
         path: HelmCharts/microservices
         helm:
           valueFiles:
@@ -55,4 +51,4 @@ spec:
       syncPolicy:
         automated:
           prune: false
-          selfHeal: false
+          selfHeal: true
