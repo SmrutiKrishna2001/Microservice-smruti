@@ -63,7 +63,11 @@ jobs:
             docker tag $SERVICE:$IMAGE_TAG $ECR_URI:$IMAGE_TAG
             docker push $ECR_URI:$IMAGE_TAG
           done
-          # complete
+          
+
+
+          # Set IMAGE_TAG as output for the next job
+          echo "::set-output name=IMAGE_TAG::$IMAGE_TAG"
 
 
   update-newtag-in-helm-chart:
@@ -79,8 +83,9 @@ jobs:
 
     - name: Update tag in Helm chart
       run: |
-          # Get the short commit hash to update the tag
-          IMAGE_TAG="${{ github.sha }}"
+          # Use the IMAGE_TAG from the first job
+          IMAGE_TAG="${{ needs.build-and-push.outputs.IMAGE_TAG }}"
+
           
           # Update the tag in the appropriate Helm chart values.yaml files
           for VALUES_FILE in HelmCharts/microservices/values/*-values.yaml; do
