@@ -10,7 +10,7 @@ Deployment:
   containers:
     name: 
     image: 218306567362.dkr.ecr.ap-south-1.amazonaws.com/productcatalogservice-smruti
-    tag: 559e7d7 
+    tag: "a240ebe0a92489c92cf23cf6de81cf99eaece392"
     ports:
       - containerPort: 50051
 
