@@ -83,9 +83,6 @@ jobs:
 
     - name: Update tag in Helm chart
       run: |
-          # Use the IMAGE_TAG from the first job
-          IMAGE_TAG="${{ needs.build-and-push.outputs.IMAGE_TAG }}"
-
           
           # Update the tag in the appropriate Helm chart values.yaml files
           for VALUES_FILE in HelmCharts/microservices/values/*-values.yaml; do
