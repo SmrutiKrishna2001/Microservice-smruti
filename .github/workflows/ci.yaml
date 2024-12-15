@@ -5,6 +5,7 @@ on:
       - practice
     paths:
       - src/**
+
       - .github/workflows/ci.yaml
 
 jobs:
@@ -63,37 +64,34 @@ jobs:
             docker tag $SERVICE:$IMAGE_TAG $ECR_URI:$IMAGE_TAG
             docker push $ECR_URI:$IMAGE_TAG
           done
-          
-
-
-          # Set IMAGE_TAG as output for the next job
-          echo "::set-output name=IMAGE_TAG::$IMAGE_TAG"
+          # complete
 
 
   update-newtag-in-helm-chart:
     runs-on: ubuntu-latest
 
+
     needs: build-and-push
 
-    steps:
+    steps: 
     - name: Checkout repository
       uses: actions/checkout@v4
       with:
-        token: ${{ secrets.GIT_HUB_TOKEN }}
-
+        token: ${{ secrets.GIT_HUB_TOKEN}}
     - name: Update tag in Helm chart
       run: |
-          
-          # Update the tag in the appropriate Helm chart values.yaml files
-          for VALUES_FILE in HelmCharts/microservices/values/*-values.yaml; do
-            echo "Updating tag in $VALUES_FILE"
-            sed -i "s/tag: .*/tag: \"$IMAGE_TAG\"/" $VALUES_FILE
-          done
-
+        # Get the short commit hash to update the tag
+        IMAGE_TAG=$(git rev-parse --short ${{ github.sha }})
+        
+        # Update the tag in the appropriate Helm chart values.yaml files
+        for VALUES_FILE in HelmCharts/microservices/values/*-values.yaml; do
+          echo "Updating tag in $VALUES_FILE"
+          sed -i "s/tag: .*/tag: \"$IMAGE_TAG\"/" $VALUES_FILE
+        done
     - name: Commit and push changes
       run: |
-        git config --global user.email "Krishna.ops.com"
-        git config --global user.name "Krishna"
+        git config --global user.email "Krishna"
+        git config --global user.name "Krishna.Ops.com"
         git add .
         git commit -m "Update tag in Helm chart"
         git push
