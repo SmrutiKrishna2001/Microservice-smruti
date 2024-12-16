@@ -10,7 +10,7 @@ Deployment:
   containers:
     name: 
     image: 218306567362.dkr.ecr.ap-south-1.amazonaws.com/cartservice-smruti
-    tag: "a240ebe0a92489c92cf23cf6de81cf99eaece392"
+    tag: "848f4d3"
     ports:
       - containerPort: 50051
 
