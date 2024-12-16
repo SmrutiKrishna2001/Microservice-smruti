@@ -93,5 +93,5 @@ jobs:
         git config --global user.email "Krishna"
         git config --global user.name "Krishna.Ops.com"
         git add .
-        git commit -m "Update tag in Helm chart"
+        git commit -m "Update tag in Helm chart for ArgoCD"
         git push
