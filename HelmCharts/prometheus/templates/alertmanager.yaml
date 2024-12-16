@@ -1,0 +1,52 @@
+# alertmanager-slack.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: alertmanager
+  namespace: monitoring  # Make sure this matches your setup
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: alertmanager
+  template:
+    metadata:
+      labels:
+        app: alertmanager
+    spec:
+      containers:
+        - name: alertmanager
+          image: prom/alertmanager:v0.24.0  # Make sure you're using the correct image version
+          args:
+            - "--config.file=/etc/alertmanager/config/alertmanager.yaml"
+          volumeMounts:
+            - name: config-volume
+              mountPath: /etc/alertmanager/config
+              readOnly: true
+      volumes:
+        - name: config-volume
+          configMap:
+            name: alertmanager-config  # You will create this config map with the Slack config
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: alertmanager-config
+  namespace: monitoring
+data:
+  alertmanager.yaml: |
+    global:
+      resolve_timeout: 5m
+    route:
+      group_by: ['alertname']
+      group_wait: 30s
+      group_interval: 5m
+      repeat_interval: 3h
+      receiver: 'slack-notifications'
+    receivers:
+      - name: 'slack-notifications'
+        slack_configs:
+          - api_url: '<SLACK_WEBHOOK_URL>'  # Replace this with your actual Slack webhook URL
+            channel: '#your-slack-channel'   # Replace with your Slack channel
+            send_resolved: true
