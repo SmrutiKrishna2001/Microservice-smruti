@@ -9,7 +9,8 @@ Deployment:
 
   containers:
     name: 
-    image: 218306567362.dkr.ecr.ap-south-1.amazonaws.com/featureflagservice-smruti:aa7b53b 
+    image: 218306567362.dkr.ecr.ap-south-1.amazonaws.com/featureflagservice-smruti
+    tag: "848f4d3"
     ports:
       - containerPort: 8080  # Feature Flag Service UI
       - containerPort: 50051  # Feature Flag Service gRPC API

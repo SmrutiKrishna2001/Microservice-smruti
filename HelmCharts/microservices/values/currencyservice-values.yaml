@@ -9,7 +9,8 @@ Deployment:
 
   containers:
     name: 
-    image: 218306567362.dkr.ecr.ap-south-1.amazonaws.com/currencyservice-smruti:559e7d7 
+    image: 218306567362.dkr.ecr.ap-south-1.amazonaws.com/currencyservice-smruti
+    tag: "848f4d3"
     ports:
       - containerPort: 50051
 

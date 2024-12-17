@@ -9,7 +9,8 @@ Deployment:
 
   containers:
     name: 
-    image: 218306567362.dkr.ecr.ap-south-1.amazonaws.com/paymentservice-smruti:aa7b53b 
+    image: 218306567362.dkr.ecr.ap-south-1.amazonaws.com/paymentservice-smruti
+    tag: "848f4d3"
     ports:
       - containerPort: 8080
 
